@@ -1,0 +1,1 @@
+# plugin-automatic-artikel
