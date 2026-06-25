@@ -4,12 +4,15 @@ Tags: ai, article, rewrite, anthropic, importer
 Requires at least: 5.8
 Tested up to: 6.5
 Requires PHP: 5.6
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Import approved article URLs or RSS feeds, rewrite them with Anthropic Claude, and create WordPress posts.
 
 Website: https://ajidmujaddid.staff.telkomuniversity.ac.id/
+
+This plugin is intended for content that site owners own, license, or have permission to republish. Site owners are responsible for complying with source website terms, copyright law, and third-party API terms.
 
 == Setup ==
 1. Upload and activate the plugin.
@@ -43,3 +46,44 @@ Website: https://ajidmujaddid.staff.telkomuniversity.ac.id/
 * Rewrite quality control.
 * Source testing.
 * Safety mode that keeps generated posts as draft.
+* Optional source attribution link in generated post content.
+
+== Third-party services ==
+
+This plugin can connect to the Anthropic API when the site owner adds an Anthropic API key and uses API testing, preview, rewrite, or import features. Article text, prompts, titles, and related rewrite instructions are sent to Anthropic for processing.
+
+Anthropic service:
+https://www.anthropic.com/
+
+Anthropic legal terms and privacy information:
+https://www.anthropic.com/legal
+
+The plugin also requests the source URLs or RSS feeds configured by the site owner in order to fetch article content and images.
+
+== Privacy ==
+
+The plugin does not add tracking scripts and does not send data to external services unless the site owner configures sources and an Anthropic API key, then runs testing, preview, import, or queue processing.
+
+== Frequently Asked Questions ==
+
+= Can this plugin republish any article from any website? =
+
+No. Use it only with content that you own, license, or have permission to republish.
+
+= Does it automatically publish generated posts? =
+
+Safety mode is enabled by default and keeps generated posts as drafts. The site owner can change the post status settings.
+
+= Can it add a source link? =
+
+Yes. Source attribution links are optional and controlled from the plugin settings.
+
+== Changelog ==
+
+= 1.2.1 =
+* Added GPL license header and license file.
+* Added third-party service and privacy disclosures.
+* Added optional source attribution setting.
+
+= 1.2.0 =
+* Added featured images, queue processing, source testing, SEO plugin metadata, auto tags, content cleaner, and quality controls.

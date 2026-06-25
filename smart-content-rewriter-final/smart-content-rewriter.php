@@ -3,10 +3,12 @@
 Plugin Name: Smart Content Rewriter
 Plugin URI: https://ajidmujaddid.staff.telkomuniversity.ac.id/
 Description: Import approved article URLs or RSS feeds, preview and rewrite them with Anthropic Claude, and create WordPress posts.
-Version: 1.2.0
+Version: 1.2.1
 Author: Ajid Digital Tools
 Author URI: https://ajidmujaddid.staff.telkomuniversity.ac.id/
 Requires PHP: 5.6
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: smart-content-rewriter
 */
 
@@ -14,7 +16,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('SCR_VERSION', '1.2.0');
+define('SCR_VERSION', '1.2.1');
 define('SCR_OPTION', 'ajid_scr_options');
 define('SCR_LOG_OPTION', 'ajid_scr_logs');
 define('SCR_HISTORY_OPTION', 'ajid_scr_history');
@@ -56,6 +58,7 @@ function ajid_scr_defaults()
         'require_h2' => 0,
         'banned_phrases' => '',
         'safety_mode' => 1,
+        'include_source_link' => 0,
         'duplicate_title_check' => 1,
         'duplicate_hash_check' => 1,
         'post_status' => 'draft',
@@ -132,6 +135,7 @@ function ajid_scr_save_options($input)
         'require_h2' => empty($input['require_h2']) ? 0 : 1,
         'banned_phrases' => isset($input['banned_phrases']) ? sanitize_text_field(wp_unslash($input['banned_phrases'])) : '',
         'safety_mode' => empty($input['safety_mode']) ? 0 : 1,
+        'include_source_link' => empty($input['include_source_link']) ? 0 : 1,
         'duplicate_title_check' => empty($input['duplicate_title_check']) ? 0 : 1,
         'duplicate_hash_check' => empty($input['duplicate_hash_check']) ? 0 : 1,
         'post_status' => in_array($post_status, array('draft', 'pending', 'publish'), true) ? $post_status : 'draft',
@@ -501,6 +505,7 @@ function ajid_scr_render_admin()
                                     <label><input type="checkbox" name="scr[enable_seo_plugin_meta]" value="1" <?php checked($options['enable_seo_plugin_meta']); ?>> Save Yoast/RankMath meta description</label>
                                     <label><input type="checkbox" name="scr[enable_auto_tags]" value="1" <?php checked($options['enable_auto_tags']); ?>> Generate tags with AI</label>
                                     <label><input type="checkbox" name="scr[safety_mode]" value="1" <?php checked($options['safety_mode']); ?>> Safety mode</label>
+                                    <label><input type="checkbox" name="scr[include_source_link]" value="1" <?php checked($options['include_source_link']); ?>> Include source link in public post content</label>
                                 </td>
                             </tr>
                         </table>
@@ -1007,7 +1012,7 @@ function ajid_scr_insert_rewritten_post($item, $article, $rewritten, $options)
     $post_status = !empty($source_rule['status']) ? $source_rule['status'] : $options['post_status'];
     $category_id = ajid_scr_resolve_category($item, $article, $rewritten, $options);
     $source_link = '<p><small>Source: <a href="' . esc_url($item['url']) . '" rel="nofollow noopener" target="_blank">' . esc_html($item['url']) . '</a></small></p>';
-    $content = $rewritten['content'] . "\n\n" . $source_link;
+    $content = !empty($options['include_source_link']) ? $rewritten['content'] . "\n\n" . $source_link : $rewritten['content'];
     $post_title = !empty($rewritten['seo_title']) ? $rewritten['seo_title'] : $rewritten['title'];
 
     $postarr = array(
