@@ -1,15 +1,15 @@
 <?php
 /*
-Plugin Name: Smart Content Rewriter
+Plugin Name: SourceWise AI Publisher
 Plugin URI: https://ajidmujaddid.staff.telkomuniversity.ac.id/
-Description: Import approved article URLs or RSS feeds, preview and rewrite them with Anthropic Claude, and create WordPress posts.
+Description: Create draft posts from approved source URLs or RSS feeds with optional Anthropic-powered editorial assistance.
 Version: 1.2.1
 Author: Ajid Digital Tools
 Author URI: https://ajidmujaddid.staff.telkomuniversity.ac.id/
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Text Domain: smart-content-rewriter
+Text Domain: sourcewise-ai-publisher
 */
 
 if (!defined('ABSPATH')) {
@@ -35,7 +35,7 @@ function ajid_scr_defaults()
         'sources' => '',
         'source_rules' => '',
         'keyword_categories' => '',
-        'prompt' => 'Rewrite this article in natural Indonesian. Keep the facts, make the wording original, improve readability, create an original title, and do not add unsupported claims.',
+        'prompt' => 'Create an original editorial draft in natural Indonesian from this approved source material. Keep the facts, improve readability, create an original title, and do not add unsupported claims.',
         'language' => 'Indonesian',
         'writing_style' => 'natural editorial',
         'target_length' => 'medium',
@@ -243,10 +243,10 @@ function ajid_scr_get_history()
 function ajid_scr_admin_menu()
 {
     add_menu_page(
-        'Smart Content Rewriter',
-        'AI Rewriter',
+        'SourceWise AI Publisher',
+        'SourceWise',
         'manage_options',
-        'smart-content-rewriter',
+        'sourcewise-ai-publisher',
         'ajid_scr_render_admin',
         'dashicons-edit-page',
         58
@@ -256,7 +256,7 @@ add_action('admin_menu', 'ajid_scr_admin_menu');
 
 function ajid_scr_admin_assets($hook)
 {
-    if ($hook !== 'toplevel_page_smart-content-rewriter') {
+    if ($hook !== 'toplevel_page_sourcewise-ai-publisher') {
         return;
     }
 
@@ -423,7 +423,7 @@ function ajid_scr_render_admin()
     $notice = sanitize_key(isset($_GET['ajid_scr_notice']) ? $_GET['ajid_scr_notice'] : '');
     ?>
     <div class="wrap">
-        <h1>Smart Content Rewriter</h1>
+        <h1>SourceWise AI Publisher</h1>
         <?php ajid_scr_render_notice($notice); ?>
 
         <div class="scr-layout">
@@ -450,7 +450,7 @@ function ajid_scr_render_admin()
                                 </td>
                             </tr>
                             <tr>
-                                <th scope="row"><label for="ajid_scr_prompt">Rewrite Prompt</label></th>
+                                <th scope="row"><label for="ajid_scr_prompt">Editorial Prompt</label></th>
                                 <td><textarea id="ajid_scr_prompt" class="large-text" rows="5" name="scr[prompt]"><?php echo esc_textarea($options['prompt']); ?></textarea></td>
                             </tr>
                             <tr>
@@ -517,7 +517,7 @@ function ajid_scr_render_admin()
                             <tr>
                                 <th scope="row">Cleaner</th>
                                 <td>
-                                    <label><input type="checkbox" name="scr[cleaner_enabled]" value="1" <?php checked($options['cleaner_enabled']); ?>> Clean article before rewrite</label>
+                                    <label><input type="checkbox" name="scr[cleaner_enabled]" value="1" <?php checked($options['cleaner_enabled']); ?>> Clean article before drafting</label>
                                     <p><input type="text" class="large-text" name="scr[cleaner_blocklist]" value="<?php echo esc_attr($options['cleaner_blocklist']); ?>"></p>
                                 </td>
                             </tr>
@@ -545,7 +545,7 @@ function ajid_scr_render_admin()
                                 <th scope="row"><label for="ajid_scr_source_rules">Managed Sources</label></th>
                                 <td>
                                     <textarea id="ajid_scr_source_rules" class="large-text code" rows="6" name="scr[source_rules]"><?php echo esc_textarea($options['source_rules']); ?></textarea>
-                                    <p class="description">Format: URL | Label | Category ID | Status | keywords | custom prompt. Example: https://example.com/feed | Campus | 3 | draft | kampus, mahasiswa | Rewrite as campus news.</p>
+                                    <p class="description">Format: URL | Label | Category ID | Status | keywords | custom prompt. Example: https://example.com/feed | Campus | 3 | draft | kampus, mahasiswa | Create a formal campus news draft.</p>
                                 </td>
                             </tr>
                             <tr>
@@ -648,7 +648,7 @@ function ajid_scr_render_admin()
                 <?php endif; ?>
 
                 <section class="scr-panel">
-                    <h2>Test Rewrite</h2>
+                    <h2>Test Editorial Draft</h2>
                     <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" style="margin-bottom:10px">
                         <?php wp_nonce_field('ajid_scr_test_api'); ?>
                         <input type="hidden" name="action" value="ajid_scr_test_api">
@@ -659,7 +659,7 @@ function ajid_scr_render_admin()
                         <input type="hidden" name="action" value="ajid_scr_test_rewrite">
                         <input type="text" class="large-text" name="test_title" placeholder="Original title">
                         <textarea class="large-text" rows="7" name="test_content" placeholder="Paste article text here"></textarea>
-                        <?php submit_button('Rewrite Test', 'secondary', 'submit', false); ?>
+                        <?php submit_button('Draft Test', 'secondary', 'submit', false); ?>
                     </form>
                     <?php if (!empty($test_result)) : ?>
                         <div class="scr-result">
@@ -729,7 +729,7 @@ function ajid_scr_render_notice($notice)
         'saved' => 'Settings saved.',
         'imported' => 'Import completed.',
         'imported_with_errors' => 'Import completed with errors. Check logs.',
-        'tested' => 'Rewrite test completed. Check result or logs.',
+        'tested' => 'Draft test completed. Check result or logs.',
         'api_ok' => 'API connection succeeded.',
         'api_failed' => 'API connection failed. Check logs.',
         'preview_ready' => 'Preview generated.',
@@ -1218,17 +1218,17 @@ function ajid_scr_validate_rewrite_quality($rewritten, $options)
 {
     $plain = wp_strip_all_tags($rewritten['content']);
     if (!empty($options['min_rewrite_words']) && str_word_count($plain) < absint($options['min_rewrite_words'])) {
-        return new WP_Error('ajid_scr_quality_word_count', 'Rewrite is shorter than minimum word count.');
+        return new WP_Error('ajid_scr_quality_word_count', 'Draft is shorter than minimum word count.');
     }
 
     if (!empty($options['require_h2']) && stripos($rewritten['content'], '<h2') === false) {
-        return new WP_Error('ajid_scr_quality_h2', 'Rewrite does not contain an H2 heading.');
+        return new WP_Error('ajid_scr_quality_h2', 'Draft does not contain an H2 heading.');
     }
 
     $banned = array_filter(array_map('trim', explode(',', $options['banned_phrases'])));
     foreach ($banned as $phrase) {
         if ($phrase !== '' && stripos($plain, $phrase) !== false) {
-            return new WP_Error('ajid_scr_quality_banned_phrase', 'Rewrite contains banned phrase: ' . $phrase);
+            return new WP_Error('ajid_scr_quality_banned_phrase', 'Draft contains banned phrase: ' . $phrase);
         }
     }
 

@@ -1,6 +1,6 @@
-=== Smart Content Rewriter ===
-Contributors: Ajid Digital Tools
-Tags: ai, article, rewrite, anthropic, importer
+=== SourceWise AI Publisher ===
+Contributors: halimurrosyid
+Tags: ai, content, publisher, rss, editorial
 Requires at least: 5.8
 Tested up to: 6.5
 Requires PHP: 5.6
@@ -8,15 +8,15 @@ Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Import approved article URLs or RSS feeds, rewrite them with Anthropic Claude, and create WordPress posts.
+Create draft posts from approved source URLs or RSS feeds with optional Anthropic-powered editorial assistance.
 
 Website: https://ajidmujaddid.staff.telkomuniversity.ac.id/
 
-This plugin is intended for content that site owners own, license, or have permission to republish. Site owners are responsible for complying with source website terms, copyright law, and third-party API terms.
+This plugin is intended only for content that site owners own, license, or have explicit permission to use. Site owners are responsible for complying with source website terms, copyright law, and third-party API terms.
 
 == Setup ==
 1. Upload and activate the plugin.
-2. Open WP Admin > AI Rewriter.
+2. Open WP Admin > SourceWise.
 3. Add your Anthropic API key.
 4. Keep the model as claude-haiku-4-5-20251001 or replace it with another Anthropic model.
 5. Add one source URL or RSS feed per line.
@@ -38,19 +38,19 @@ This plugin is intended for content that site owners own, license, or have permi
 * Import history.
 * Duplicate protection by source URL, content hash, and similar title.
 * Featured image from OG image, first article image, or RSS media.
-* Cleaner content before rewrite.
+* Cleaner content before editorial drafting.
 * Queue processing to reduce timeout risk.
 * Per-source custom prompt.
 * Yoast and RankMath meta description support.
 * AI-generated tags.
-* Rewrite quality control.
+* Editorial draft quality control.
 * Source testing.
 * Safety mode that keeps generated posts as draft.
 * Optional source attribution link in generated post content.
 
 == Third-party services ==
 
-This plugin can connect to the Anthropic API when the site owner adds an Anthropic API key and uses API testing, preview, rewrite, or import features. Article text, prompts, titles, and related rewrite instructions are sent to Anthropic for processing.
+This plugin can connect to the Anthropic API when the site owner adds an Anthropic API key and uses API testing, preview, editorial drafting, or import features. Article text, prompts, titles, and related instructions are sent to Anthropic for processing.
 
 Anthropic service:
 https://www.anthropic.com/

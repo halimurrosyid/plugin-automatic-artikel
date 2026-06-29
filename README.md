@@ -1,17 +1,17 @@
-# plugin-automatic-artikel
+# SourceWise AI Publisher
 
-Smart Content Rewriter is a WordPress plugin for importing approved article URLs or RSS feeds, rewriting content with Anthropic Claude, and creating WordPress posts.
+SourceWise AI Publisher is a WordPress plugin for creating draft posts from approved source URLs or RSS feeds with optional Anthropic-powered editorial assistance.
 
 ## Current Package
 
-- Plugin name: Smart Content Rewriter
-- Version: 1.2.0
-- Upload ZIP: `smart-content-rewriter-final.zip`
-- Source folder: `smart-content-rewriter-final/`
+- Plugin name: SourceWise AI Publisher
+- Version: 1.2.1
+- WordPress.org-ready ZIP: `sourcewise-ai-publisher.zip`
+- Source folder: `sourcewise-ai-publisher/`
 
 ## Main Features
 
-- Anthropic Claude rewrite with default model `claude-haiku-4-5-20251001`
+- Anthropic-powered editorial drafting with default model `claude-haiku-4-5-20251001`
 - URL and RSS/Atom source import
 - Preview before saving posts
 - Featured image import from OG image, first article image, or RSS media
@@ -22,3 +22,7 @@ Smart Content Rewriter is a WordPress plugin for importing approved article URLs
 - AI-generated tags
 - Duplicate protection
 - Import history and detailed logs
+
+## WordPress.org Notes
+
+This plugin is intended only for content that site owners own, license, or have explicit permission to use. It includes GPL licensing information, third-party service disclosure for Anthropic, and a privacy section in `readme.txt`.
